@@ -1,0 +1,105 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ theme.app_title }}</title>
+    <link rel="stylesheet" href="{% static 'chatbot/styles.css' %}?v=provider-toggle-2">
+    <script src="{% static 'chatbot/chat.js' %}?v=prompt-preview-1" defer></script>
+  </head>
+  <body data-chat-url="{% url 'chat' %}" data-prompt-preview-url="{% url 'prompt_preview' %}">
+    <main class="shell">
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">{{ theme.workshop_label }}</p>
+            <h1>{{ theme.assistant_name }}</h1>
+          </div>
+          <form method="post" action="{% url 'reset_chat' %}">
+            {% csrf_token %}
+            <button class="ghost" type="submit">Reset</button>
+          </form>
+        </header>
+
+        <div class="control-panel">
+          <label class="debug-toggle">
+            <input type="checkbox" id="debug-toggle">
+            Debug
+          </label>
+          <label class="provider-select">
+            Provider
+            <select id="provider-select" name="provider">
+              {% for option in provider_options %}
+                <option value="{{ option }}"{% if option == selected_provider %} selected{% endif %}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <span class="status">{{ app_status_label }}</span>
+          <span class="status">Theme: {{ theme.assistant_role }}</span>
+          <span class="status debug-only">Model client: <strong id="configured-provider">{{ configured_provider }}</strong></span>
+          <span class="status debug-only">Gemini key loaded: <strong id="gemini-key-loaded">{{ gemini_key_loaded }}</strong></span>
+        </div>
+
+        <section class="chat-log" id="chat-log" aria-live="polite">
+          {% if history %}
+            {% for item in history %}
+              <article class="message {{ item.role }}">
+                <span>{{ item.role }}</span>
+                <div class="message-body{% if item.role == 'assistant' %} markdown-source{% endif %}">{{ item.content }}</div>
+              </article>
+            {% endfor %}
+          {% else %}
+            <article class="empty-state">
+              <h2>{{ theme.empty_state_title }}</h2>
+              <p>{{ theme.empty_state_body }}</p>
+            </article>
+          {% endif %}
+        </section>
+
+        <p class="notice{% if error %} error{% endif %}" id="notice">
+          {% if error %}
+            {{ error }}
+          {% elif provider %}
+            Response provider: {{ provider }}{% if model %} / {{ model }}{% endif %}
+          {% endif %}
+        </p>
+
+        <form method="post" class="composer" id="chat-form">
+          {% csrf_token %}
+          <textarea id="message-input" name="message" rows="3" placeholder="{{ theme.input_placeholder }}" required></textarea>
+          <div class="composer-actions">
+            <span class="request-timer" id="request-timer" hidden>0.0s</span>
+            <button class="stop-button" id="stop-button" type="button" hidden>Stop</button>
+            <button id="send-button" type="submit">Send</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="lab-notes">
+        <h2>{{ theme.synthetic_secret_label }}</h2>
+        <p>{{ theme.synthetic_secret_description }}</p>
+        <code>{{ synthetic_secret }}</code>
+        <section class="debug-panel debug-only" id="debug-panel" hidden>
+          <h2>Debug</h2>
+          <pre id="debug-output">No request yet.</pre>
+          <div class="prompt-debug">
+            <div class="prompt-debug-header">
+              <h3>Rendered prompt</h3>
+              <button class="icon-button" id="open-prompt-modal" type="button" aria-label="Open rendered prompt dialog" title="Open rendered prompt">⛶</button>
+            </div>
+            <pre class="prompt-preview" id="debug-prompt">No prompt rendered yet.</pre>
+          </div>
+        </section>
+      </aside>
+    </main>
+    <dialog class="prompt-modal" id="prompt-modal">
+      <div class="prompt-modal-header">
+        <h2>Rendered Prompt</h2>
+        <button class="icon-button" id="close-prompt-modal" type="button" aria-label="Close rendered prompt dialog" title="Close">×</button>
+      </div>
+      <pre id="prompt-modal-content">No prompt rendered yet.</pre>
+    </dialog>
+  </body>
+</html>
+

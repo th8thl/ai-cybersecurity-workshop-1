@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Prompt Injection Threat Model</title>
+  <desc id="desc">Threat model showing assets, attacker controls, trust boundaries, and starter risks for the chatbot application.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#147d92"/>
+    </marker>
+    <style>
+      .bg{fill:#f4f1e8}
+      .panel{fill:#fffdf7;stroke:#cfcec3;stroke-width:2;rx:18}
+      .risk{fill:#fff1c5;stroke:#ee7b45;stroke-width:3;rx:18}
+      .attacker{fill:#fde5de;stroke:#c94f3d;stroke-width:3;rx:18}
+      .title{font:800 34px Segoe UI,Arial,sans-serif;fill:#17212b}
+      .label{font:800 23px Segoe UI,Arial,sans-serif;fill:#17212b}
+      .body{font:500 18px Segoe UI,Arial,sans-serif;fill:#17212b}
+      .mono{font:700 16px Consolas,monospace;fill:#096478}
+      .arrow{stroke:#147d92;stroke-width:4;fill:none;marker-end:url(#arrow)}
+      .bad{stroke:#c94f3d;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="60" y="60" class="title">Threat model: what can go wrong?</text>
+  <text x="60" y="92" class="body">The attacker controls chat input. The app controls policy, secrets, and how prompts are built.</text>
+
+  <rect x="60" y="150" width="250" height="145" class="attacker"/>
+  <text x="90" y="190" class="label">Attacker controls</text>
+  <text x="90" y="224" class="body">Chat messages</text>
+  <text x="90" y="252" class="body">Role-play wording</text>
+  <text x="90" y="280" class="body">Repeated attempts</text>
+
+  <rect x="405" y="135" width="330" height="175" class="panel"/>
+  <text x="435" y="176" class="label">Application assets</text>
+  <text x="435" y="210" class="body">Gemini API key</text>
+  <text x="435" y="238" class="body">Synthetic student record</text>
+  <text x="435" y="266" class="body">System instructions</text>
+  <text x="435" y="294" class="body">Chat history and logs</text>
+
+  <rect x="830" y="150" width="300" height="145" class="panel"/>
+  <text x="860" y="190" class="label">Model boundary</text>
+  <text x="860" y="224" class="body">Provider call</text>
+  <text x="860" y="252" class="body">Model output</text>
+  <text x="860" y="280" class="mono">output is not trusted</text>
+
+  <rect x="350" y="405" width="500" height="170" class="risk"/>
+  <text x="380" y="448" class="label">Starter risk</text>
+  <text x="380" y="484" class="body">The latest user message is promoted into</text>
+  <text x="380" y="512" class="body">trusted turn-level instructions.</text>
+  <text x="380" y="546" class="mono">data becomes instructions</text>
+
+  <path class="bad" d="M310 222 C350 222 365 222 405 222"/>
+  <path class="arrow" d="M735 222 C775 222 795 222 830 222"/>
+  <path class="bad" d="M185 295 C245 385 310 430 350 470"/>
+  <path class="arrow" d="M980 295 C910 380 850 425 800 470"/>
+</svg>

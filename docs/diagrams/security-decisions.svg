@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Security Decisions Map</title>
+  <desc id="desc">A map of starter security decisions, the reason for each decision, and the improvements implemented later.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#147d92"/>
+    </marker>
+    <style>
+      .bg{fill:#f4f1e8}
+      .panel{fill:#fffdf7;stroke:#cfcec3;stroke-width:2;rx:18}
+      .focus{fill:#fff1c5;stroke:#ee7b45;stroke-width:3;rx:18}
+      .future{fill:#e6eee9;stroke:#147d92;stroke-width:3;rx:18}
+      .title{font:800 34px Segoe UI,Arial,sans-serif;fill:#17212b}
+      .label{font:800 23px Segoe UI,Arial,sans-serif;fill:#17212b}
+      .body{font:500 18px Segoe UI,Arial,sans-serif;fill:#17212b}
+      .mono{font:700 17px Consolas,monospace;fill:#096478}
+      .arrow{stroke:#147d92;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="60" y="60" class="title">Security decisions in the vulnerable app</text>
+  <text x="60" y="92" class="body">The team should be able to explain why each decision exists and what risk remains.</text>
+
+  <rect x="70" y="150" width="300" height="150" class="panel"/>
+  <text x="100" y="190" class="label">API keys</text>
+  <text x="100" y="224" class="body">Loaded from environment</text>
+  <text x="100" y="252" class="mono">.env is not committed</text>
+
+  <rect x="450" y="150" width="300" height="150" class="panel"/>
+  <text x="480" y="190" class="label">Synthetic record</text>
+  <text x="480" y="224" class="body">Fake sensitive data</text>
+  <text x="480" y="252" class="body">Safe for leakage practice</text>
+
+  <rect x="830" y="150" width="300" height="150" class="panel"/>
+  <text x="860" y="190" class="label">Local fallback</text>
+  <text x="860" y="224" class="body">Runs without cloud access</text>
+  <text x="860" y="252" class="body">Supports classroom setup</text>
+
+  <rect x="260" y="380" width="310" height="170" class="focus"/>
+  <text x="290" y="422" class="label">Deliberate flaw</text>
+  <text x="290" y="458" class="body">Latest user message is copied</text>
+  <text x="290" y="486" class="body">into trusted instructions</text>
+  <text x="290" y="520" class="mono">prompt injection practice</text>
+
+  <rect x="650" y="380" width="330" height="170" class="future"/>
+  <text x="680" y="422" class="label">Defenses to add</text>
+  <text x="680" y="458" class="body">Separate trusted/untrusted text</text>
+  <text x="680" y="486" class="body">Add input checks and redaction</text>
+  <text x="680" y="514" class="body">Compare observed attack behavior</text>
+
+  <path class="arrow" d="M220 300 C260 340 315 360 370 382"/>
+  <path class="arrow" d="M600 300 C560 342 510 360 470 382"/>
+  <path class="arrow" d="M980 300 C930 340 875 360 835 382"/>
+  <path class="arrow" d="M570 465 C600 465 620 465 650 465"/>
+</svg>
+
+
+
