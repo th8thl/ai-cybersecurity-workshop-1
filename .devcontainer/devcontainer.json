@@ -1,9 +1,18 @@
 
 {
-  "name": "AI Cybersecurity Workshop 1",
+  "name": "AI Cybersecurity Workshop",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
-  "postCreateCommand": "pip install -r requirements.txt && python manage.py migrate",
+
+  "containerEnv": {
+    "OLLAMA_MODELS": "/workspaces/.ollama-models"
+  },
+
+  "postCreateCommand": "bash -lc 'set -euo pipefail; cd starter; echo \"=== Installing Django dependencies ===\"; python -m pip install -r requirements.txt; echo \"=== Configuring Django ===\"; python -c \"from pathlib import Path; from dotenv import dotenv_values, set_key; from django.core.management.utils import get_random_secret_key; p = Path(\\\".env\\\"); p.exists() or p.write_text(Path(\\\".env.example\\\").read_text() if Path(\\\".env.example\\\").exists() else \\\"\\\"); dotenv_values(p).get(\\\"DJANGO_SECRET_KEY\\\") or set_key(str(p), \\\"DJANGO_SECRET_KEY\\\", get_random_secret_key())\"; python manage.py migrate; echo \"=== Installing Ollama ===\"; curl -fsSL https://ollama.com/install.sh -o /tmp/install-ollama.sh; sudo apt-get update && sudo apt-get install -y zstd; sh /tmp/install-ollama.sh; echo \"=== Starting Ollama ===\"; if ! curl -fsS http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then nohup ollama serve > /tmp/ollama.log 2>&1 < /dev/null & fi; ready=0; for i in $(seq 1 60); do if curl -fsS http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then ready=1; break; fi; sleep 1; done; if [ \"$ready\" -ne 1 ]; then cat /tmp/ollama.log; exit 1; fi; echo \"=== Downloading Qwen3 0.6B ===\"; ollama pull qwen3:0.6b; echo \"=== Setup complete ===\"'",
+
+  "postStartCommand": "bash -lc 'if command -v ollama > /dev/null 2>&1 && ! curl -fsS http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then nohup ollama serve > /tmp/ollama.log 2>&1 < /dev/null & fi'",
+
   "forwardPorts": [8000],
+
   "portsAttributes": {
     "8000": {
       "label": "Django Workshop",
@@ -11,6 +20,7 @@
       "visibility": "private"
     }
   },
+
   "customizations": {
     "vscode": {
       "extensions": [
